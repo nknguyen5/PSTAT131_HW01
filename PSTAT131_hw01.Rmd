@@ -1,7 +1,7 @@
 ---
 title: "PSTAT131_hw01"
-author: "Ngoc-Ngan"
-date: "9/28/2022"
+author: "Ngoc-Ngan Nguyen"
+date: "10/02/2022"
 output: html_document
 ---
 
@@ -9,22 +9,94 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Machine Learning Ideas
+## Question 1
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+According to the textbook on page 26, supervised learning is when for each observation of the predictor measurement(s) xi, i = 1,...,n there is an associated response measurement yi. Whereas, unsupervised learning is when for every observation i = 1,...,n, we observe a vector of measurements xi, but no associated response yi, and it cannot be fit into a linear regression model.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Question 2
 
-```{r cars}
-summary(cars)
+According to the textbook on page 28, we tend to refer to problems with a quantitative response as regression problems, while those involving a qualitative response are often referred to as classification problems. Least squares linear regression is used with a quantitative response, whereas logistic regression is typically used with a qualitative (two-class, or binary) response. Thus, despite its name, logistic regression is a classification method. But since it estimates class probabilities, it can be thought of as a regression model as well.
+
+## Question 3
+
+Two commonly used metrics for regression ML problems are: Mean Squared Error (MSE) and Mean Absolute Error (MAE). And two commonly used metrics for classification ML problems are: accuracy and precision.
+
+## Question 4
+
+According to lecture...
+
+Descriptive models: are chosen to best visually emphasize a trend in data.
+
+Inferential models: highlight what features are significant, aim to test theories, find causal claims, and state the relationship between outcome and predictor(s).
+
+Predictive models: finds what combinations of features fit the best and the aim is to predict Y with the minimum reducible error (focus is not on hypotheses tests).
+
+## Question 5
+
+Mechanistic models are typically based on mathematical description of a phenomenon or process that can be described by stochastic differential equations. You can assume parametric form and it will not match the true unknown f and if you add more parameters, you can have more flexibility. Whereas, empirically driven models are typically based on relatively simple approximations like the first and second order polynomials in regression analysis. You cannot make any assumptions about f and it requires a larger number of observations and is much more flexible by default. (according to lecture)
+
+In general, I think that empirically driven models are easier to understand because they tend  to be more simple and made up of approximations.
+
+The bias–variance tradeoff is the property of a model that the variance of the parameter estimated across samples can be reduced by increasing the bias in the estimated parameters,like the mechanistic and empirically driven models.
+
+## Question 6
+
+This question: "Given a voter’s profile/data, how likely is it that they will vote in favor of the candidate?" is  inferential because we are given the data on a voter's profile and we want to infer how the outcome (voting in favor of candidate/not voting in favor of candidate) will be generated based off of their profile.
+
+This question: "How would a voter’s likelihood of support for the candidate change if they had personal contact with the candidate?" is predictive because we are taking into consideration a new measurement (if they have had personal contact with the candidate), and we are adding to an existing data set to build a model that reliably chooses the correct identifier from a set of outcomes.
+
+# Exploratory Data Analysis
+
+## Exercise 
+
+``` {r}
+library(ggplot2)
+data("mpg")
+colors <- c("Green", "Yellow", "Purple", "Blue", "Orange")
+hist(mpg$hwy, col=colors, main="Highway Miles Per Gallon", breaks=5, xlim = range(10:45), xlab="HWY",ylab= "Frequency")
 ```
 
-## Including Plots
+From this histogram, we are able to observe that the majority number of vehicles have 25-30 mpg, and that the least amount of cars have 35-40 and 40-45 mpg.
 
-You can also embed plots, for example:
+# Exercise 2
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+``` {r}
+library(ggplot2)
+
+hwy_cty_plot <- ggplot(mpg, aes(cty, hwy)) + 
+  geom_point(color='green', size=3, alpha=0.5) +
+  labs(x="City MPG", y="Highway MPG", title="City MPG vs. Highway MPG Scatterplot")
+
+print(hwy_cty_plot)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+I noticed that there is a strong positive linear correlation between city MPG and highway MPG. As the city MPG increases, so does the highway MPG. This means that if a vehicle in this dataset has a high MPG in the city, it will also have a high MPG in the highway.
+
+# Exercise 3
+
+```{r}
+count <- table(mpg$manufacturer)
+barplot(count, main = "Manufacturer Bar Plot", xlab= "Count", ylab="Manufacturers", order(count, na.last= TRUE, decreasing=TRUE), horiz = TRUE, col=blues9)
+```
+
+According to my bar plot, Ford produced the most cars and Lincoln produced the least cars.
+
+# Exercise 4
+
+```{r}
+boxplot(hwy ~ cyl, data = mpg,col = c("green", "yellow", "purple","blue"))
+```
+
+
+# Exercise 5
+
+#``` {r}
+
+install.packages("corrplot")
+head(mpg)
+matrix<-cor("mpg")
+head(round(matrix, 2))
+corrplot(matrix, type="lower")
+
+```
